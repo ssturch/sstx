@@ -2,11 +2,10 @@
 Пакет для управления транзакциями полученными от pgx.Pool.
 ## **Пример:**
 
-```
-
+```go
 func main() {
-ctx := context.Background()
-
+	
+        ctx := context.Background()
 	pool, _ := pgx.Connect(ctx, "postgres://user:pass@localhost:5432/db?sslmode=disable")
 
 	txManager := New(pool)
