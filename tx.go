@@ -12,7 +12,7 @@ type TxManager struct {
 }
 
 type pgxTx struct {
-	pgx.Tx
+	p pgx.Tx
 }
 type txUnit[T comparable] struct {
 	i *T
@@ -36,12 +36,12 @@ func (u pgxTx) StopTxByErr(ctx context.Context, err error) error {
 
 // Commit - commits the transaction
 func (u pgxTx) Commit(ctx context.Context) error {
-	return u.Tx.Commit(ctx)
+	return u.p.Commit(ctx)
 }
 
 // Rollback - rollback the transaction
 func (u pgxTx) Rollback(ctx context.Context) error {
-	return u.Tx.Rollback(ctx)
+	return u.p.Rollback(ctx)
 }
 
 // New - init new TxManager
@@ -71,5 +71,5 @@ func (m *TxManager) GetTxWithOpt(ctx context.Context, opt pgx.TxOptions) (pgxTx,
 
 // NewUnit - Create new transactional unit by interface
 func NewUnit[T comparable](tx pgxTx, repo repoTx[T]) *txUnit[T] {
-	return &txUnit[T]{i: repo.WithTx(tx)}
+	return &txUnit[T]{i: repo.WithTx(tx.p)}
 }
